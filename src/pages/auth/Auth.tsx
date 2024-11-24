@@ -1,8 +1,12 @@
+import { useEffect } from "react";
 import useItems from "../../context/useItems"
 import LogForm from "./LogForm"
 import SignForm from "./SignForm"
 
 export default function Auth() {
+  useEffect(() => {
+    document.title = "عضویت / ثبت نام";
+  }, []);
   const { isLoggedIn } = useItems()
   return (
     <div className='w-full h-[950px] lg:h-[900px] relative'>

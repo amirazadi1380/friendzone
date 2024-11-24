@@ -24,6 +24,7 @@ export default function ReceiptModal({ setIsModal, receiptInfo }: { setIsModal: 
             mutate({ data: formData, endpoint: "createPayment.php" }, {
                 onSuccess: () => {
                             toast.success("پرداخت شما با موفقیت ثبت شد")
+                            setIsModal(false)
                     
                 }
             })

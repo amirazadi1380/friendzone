@@ -1,8 +1,9 @@
 import { useForm } from "react-hook-form";
-import { Toaster, toast } from "react-hot-toast";
+import {  Toaster, toast } from "react-hot-toast";
 import { usePost } from "../utils/Service";
 import { getToken } from "../utils/Cookies";
 import { useNavigate } from "react-router-dom";
+import useItems from "../context/useItems";
 
 type TaddCardForm = {
     card: string;
@@ -12,6 +13,7 @@ export default function AddCard() {
     const navigate = useNavigate()
     const { mutate } = usePost()
     const { register, handleSubmit, formState: { errors } } = useForm<TaddCardForm>();
+    const {setShowNumber} = useItems();
 
     const onSubmit = (data: TaddCardForm) => {
         const token = getToken()
@@ -22,7 +24,9 @@ export default function AddCard() {
             mutate({ data: formData, endpoint: 'addCard.php' }, {
                 onSuccess: () => toast.success('شماره حساب با موفقیت اضافه شد')
             })
-
+            setTimeout(() => { 
+                setShowNumber(4);
+            }, 1500);
         }
         else {
             navigate('/auth')

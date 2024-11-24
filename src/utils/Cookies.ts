@@ -15,4 +15,5 @@ export const getToken = () => {
 export const deleteToken = () => {
     const token = getCookie('token');
      token ? removeCookie('token') : null;
+     location.reload();
 }
