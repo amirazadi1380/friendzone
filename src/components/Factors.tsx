@@ -88,14 +88,12 @@ export default function Factors() {
               </button>
             </div>
           </div>
-        ) : <div className="mt-10 font-bold text-green-600 text-lg relative  py-5 px-3 rounded-lg shadow shadow-white/50 border bg-white flex justify-center items-center flex-col space-y-5">
+        ) : <div className="mt-10 font-bold text-green-600 text-lg relative  py-5 px-2 text-center rounded-lg shadow shadow-white/50 border bg-white flex justify-center items-center flex-col space-y-5">
           <img src="/icons/receipt2.png" alt="debit" className="w-10 h-10 absolute left-1/2 -translate-x-1/2 -top-6" />
           <h1>تاکنون فاکتوری ایجاد نکرده اید</h1>
               <button type="button" className="inline-flex items-center p-2 text-sm font-medium text-center text-white bg-blue-600 rounded-lg justify-center space-x-2" onClick={() => {setShowNumber(3)}}>
                     <span>ساخت فاکتور جدید</span>
                 <img src="/icons/receipt.png" alt="users" className="w-6 h-6" />
-                
-      
               </button>
         </div>
         }

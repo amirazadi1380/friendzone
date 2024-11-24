@@ -30,7 +30,7 @@ export type TsidebarItems = {
 }
 
 export type TcreateReceiptForm = {
-    total_amount: number,
+    total_amount: string,
     image_url: FileList,
     description: string
 }

@@ -4,10 +4,12 @@ import { usePost } from "../utils/Service";
 import { getToken } from "../utils/Cookies";
 import { useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
+import { useState } from "react";
 
 export default function CreateFactor() {
+  const [totaPrice,setTotalPrice] = useState<string>('');
   const navigate = useNavigate()
-  const { register, handleSubmit, reset, formState:{errors} } = useForm<TcreateReceiptForm>();
+  const { register, handleSubmit, reset, formState: { errors } } = useForm<TcreateReceiptForm>();
   const { mutate } = usePost();
 
   const onSubmit = (data: TcreateReceiptForm) => {
@@ -17,22 +19,26 @@ export default function CreateFactor() {
       const currentTimeStamp = date.getTime();
       const formData = new FormData()
       formData.append('token', token)
-      formData.append('total_amount', data.total_amount.toString())
+      formData.append('total_amount', data.total_amount)
       formData.append('image_url', data.image_url[0])
       formData.append('description', data.description)
-      formData.append('created_at', (currentTimeStamp /1000).toString())
+      formData.append('created_at', (currentTimeStamp / 1000).toString())
 
-      mutate({ data: formData, endpoint: 'createReceipt.php' })
-      reset()
-      toast.success(
-        'فاکتور با موفقیت ثبت شد\n\nلطفا در قسمت فاکتورها افراد مورد نظر را اضافه کنید',
-        {
-          duration: 5000,
-          style: {
-            textAlign: 'center'
-          },
+      mutate({ data: formData, endpoint: 'createReceipt.php' }, {
+        onSuccess: () => {
+          reset()
+          toast.success(
+            'فاکتور با موفقیت ثبت شد\n\nلطفا در قسمت فاکتورها افراد مورد نظر را اضافه کنید',
+            {
+              duration: 5000,
+              style: {
+                textAlign: 'center'
+              },
+            }
+          );
         }
-      );
+      })
+
     }
     else {
       navigate('/auth');
@@ -48,12 +54,13 @@ export default function CreateFactor() {
         <form onSubmit={handleSubmit(onSubmit)} className="pb-1 space-y-4  text-center justify-center flex flex-col items-center px-5">
           <label className="block">
             <span className="block mb-1 text-xs font-medium text-gray-700">عنوان فاکتور</span>
-            <input {...register("description",{required:"عنوان فاکتور الزامیست"})} type="text" placeholder="توضیح کوتاه راجع به فاکتور" />
+            <input {...register("description", { required: "عنوان فاکتور الزامیست" })} type="text" placeholder="توضیح کوتاه راجع به فاکتور" />
             <p className='text-[10px] text-red-600 font-medium'>{errors?.description?.message}</p>
           </label>
           <label className="block">
             <span className="block mb-1 text-xs font-medium text-gray-700">قیمت کل</span>
-            <input {...register("total_amount",{required:"قیمت کل الزامیست"})} type="number" placeholder="تومان" />
+            <input {...register("total_amount", { required: "قیمت کل الزامیست" })} type="text" placeholder="تومان" onChange={(e)=>setTotalPrice(e.target.value)} />
+            <p className='text-[10px] text-red-600 font-medium text-right text-sm'>{Number(totaPrice).toLocaleString()}</p>
             <p className='text-[10px] text-red-600 font-medium'>{errors?.total_amount?.message}</p>
 
           </label>

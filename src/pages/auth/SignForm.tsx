@@ -6,7 +6,7 @@ import { usePost } from '../../utils/Service';
 export default function SignForm() {
     const { setIsLoggedIn } = useItems()
     const { register, handleSubmit, formState: { errors }, reset } = useForm<TsignForm>()
-    const { mutate } = usePost();
+    const { mutate, isPending } = usePost();
     const onSubmit = (data: TsignForm) => {
         if (data.password == data.rpassword) {
             const formData = new FormData();
@@ -14,7 +14,8 @@ export default function SignForm() {
             formData.append('password', data.password)
             formData.append('profile', data.image[0])
 
-            mutate({ data:formData, endpoint:'signup.php'},{onSuccess:()=>setIsLoggedIn(true)})
+            mutate({ data: formData, endpoint: 'signup.php' }, { onSuccess: () => {
+                setIsLoggedIn(true) }})
         }
         else {
             toast.error('پسورد ها مطابقت ندارد')
@@ -40,8 +41,18 @@ export default function SignForm() {
                     </label>
                     <label className="block">
                         <span className="block mb-1 text-xs font-medium text-gray-700">رمز عبور</span>
-                        <input {...register('password', { required: 'پسورد را به صورت صحیح وارد کنید' })} type="password" placeholder="••••••••" />
-                        <p className='text-[10px] text-red-600 font-medium'>{errors?.username?.message}</p>
+                        <input
+                            {...register('password', {
+                                required: 'پسورد را به صورت صحیح وارد کنید',
+                                minLength: {
+                                    value: 8,
+                                    message: 'پسورد نباید کمتر از ۸ کاراکتر باشد',
+                                },
+                            })}
+                            type="password"
+                            placeholder="••••••••"
+                        />
+                        <p className='text-[10px] text-red-600 font-medium'>{errors?.password?.message}</p>
                     </label>
                     <label className="block">
                         <span className="block mb-1 text-xs font-medium text-gray-700">تکرار رمز عبور</span>
@@ -50,15 +61,16 @@ export default function SignForm() {
                     </label>
                     <label className="block">
                         <span className="block mb-1 text-xs font-medium text-gray-700">پروفایل</span>
-                        <input type="file" {...register('image',{required:"عکس پروفایل الزامیست"})} />
+                        <input type="file" {...register('image', { required: "عکس پروفایل الزامیست" })} />
                         <p className='text-[10px] text-red-600 font-medium'>{errors?.image?.message}</p>
                     </label>
                     <div className="flex  items-start justify-center sm:items-center sm:flex-row space-x-20">
-                        <label className="flex items-center">
-                            <input type="checkbox" className="w-4"  />
+                        {/* <label className="flex items-center">
+                            <input type="checkbox" className="w-4" />
                             <span className="block ml-2 text-[8px]  lg:text-[9px] font-medium text-gray-700 cursor-pointer">موافقت با قوانین و مقررات</span>
-                        </label>
-                        <button type="submit" className="w-24 p-1 rounded-lg text-gray-100 bg-blue-600"  >ثبت نام</button>
+                        </label> */}
+                        {isPending ? <button type='button' className="w-24 p-2 rounded-lg text-gray-100 bg-blue-600 text-xs">منتظر بمانید</button> :
+                            <button type="submit" className="w-24 p-1 rounded-lg text-gray-100 bg-blue-600"  >ثبت نام</button>}
                     </div>
                 </form>
             </div>

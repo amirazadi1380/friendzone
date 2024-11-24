@@ -8,7 +8,7 @@ import useItems from '../../context/useItems';
 
 export default function LogForm() {
     const {setIsLoggedIn} = useItems()
-    const { mutate } = usePost();
+    const { mutate , isPending} = usePost();
     const navigate = useNavigate();
 
     const { register, handleSubmit, reset } = useForm<TloginForm>();
@@ -53,13 +53,14 @@ export default function LogForm() {
                     </label>
 
                     <div className="flex  items-start justify-between sm:items-center sm:flex-row">
-                        <button type="submit" className="w-24 p-1 rounded-lg text-gray-100 bg-blue-600"  >ورود</button>
+                    {isPending ? <button type='button' className="w-24 p-2 rounded-lg text-gray-100 bg-blue-600">منتظر بمانید</button> :
+
+                        <button type="submit" className="w-24 p-1 rounded-lg text-gray-100 bg-blue-600"  >ورود</button>}
                     </div>
                 </form>
             </div>
                     <p className="my-0 text-xs font-medium text-center text-stone-200 sm:my-5 tracking-wide pt-10 lg:pt-3 cursor-pointer">
                         <button type='button' onClick={() => setIsLoggedIn(false)} className="text-stone-200  mr-1">اکانت نداری؟  <strong className='text-blue-600'>ثبت نام</strong></button>
-              
                     </p>
 
         </div>

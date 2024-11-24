@@ -13,25 +13,30 @@ export default function UserModal({ selectedReceipt, setIsModal }: { selectedRec
     const [contributors, setContributors] = useState<Tcontributes[] | []>([]);
 
     useEffect(() => {
+        setUsers(data?.data);
         const token = getToken();
         if (token) {
-            const formData = new FormData();
-            formData.append('token', token);
-            mutate({ data: formData, endpoint: 'getUser.php' }, {
+
+            const formData1 = new FormData();
+            formData1.append("token", token);
+
+            mutate({ data: formData1, endpoint: "getUser.php" }, {
                 onSuccess: (data) => {
                     setUser(data.data);
+
+                    const formData2 = new FormData();
+                    formData2.append("receipt_id", selectedReceipt.toString());
+                    mutate({ data: formData2, endpoint: "getAllContributors.php" }, {
+                        onSuccess: (data) => setContributors(data.data),
+                    });
                 },
-                onError: (error) => console.error(error),
+                onError: (error) => {
+                    console.error("Error in getUser.php:", error);
+                },
             });
         }
+    }, [selectedReceipt,data,contributorsNum]);
 
-        setUsers(data?.data);
-        const formData2 = new FormData();
-        formData2.append("receipt_id", selectedReceipt.toString());
-        mutate({ data: formData2, endpoint: "getAllContributors.php" }, {
-            onSuccess: (data) => setContributors(data.data),
-        });
-    }, [data, contributorsNum]);
 
     const isContributor = (userId: number) => {
         return contributors.some(contributor => contributor.user_id === userId);
@@ -46,13 +51,13 @@ export default function UserModal({ selectedReceipt, setIsModal }: { selectedRec
                 </div>
                 <div className="p-4 max-w-xs mx-auto bg-white rounded-lg border shadow-md my-10">
                     <ul role="list" className="border-b">
-                        {users && users.filter(item => item.username !== user?.username).map(item => (
+                        {users && users.filter(item => item.id != user?.id).map(item => (
                             <li key={item.id} className="py-3 sm:py-4 border-b">
                                 <div className="flex items-center space-x-0 justify-between text-right">
                                     <div className="items-center text-base font-semibold text-gray-900 flex justify-center text-center w-28 ">
                                         <span
                                             onClick={() => {
-                                                if (isContributor(item.id)) return; 
+                                                if (isContributor(item.id)) return;
                                                 const formData = new FormData();
                                                 formData.append("userID", item.id.toString());
                                                 formData.append("receiptID", selectedReceipt.toString());
